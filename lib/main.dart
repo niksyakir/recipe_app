@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'di/service_locator.dart';
 import 'models/recipe.dart';
 import 'providers/recipe_provider.dart';
 import 'screens/recipe_list_screen.dart';
+import 'data/recipe_repository.dart';
+import 'services/recipe_type_service.dart';
+import 'models/user_account.dart';
+import 'screens/auth_gate.dart';
+import 'screens/register_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async {
-  // Ensures Flutter's internal bindings are ready before we run async database code
   WidgetsFlutterBinding.ensureInitialized();
   
-  // 1. Initialize Local Database storage
+  // Initialize local Hive database
   await Hive.initFlutter();
   
-  // 2. Register the generated adapter
+  // Register and open Recipe Box
   Hive.registerAdapter(RecipeAdapter());
-  
-  // 3. Open the actual storage box file
   await Hive.openBox<Recipe>('recipes');
 
+  // Register and open Auth Boxes
+  Hive.registerAdapter(UserAccountAdapter());
+  await Hive.openBox<UserAccount>('users');
+  await Hive.openBox('session'); // Untyped box for session flags
+
+  setupLocator();
+
   runApp(
-    // Wrap the entire app in a ChangeNotifierProvider so all screens can access recipes
     ChangeNotifierProvider(
-      create: (_) => RecipeProvider(),
+      create: (_) => RecipeProvider(
+        repo: locator<RecipeRepository>(),
+        typeService: locator<RecipeTypeService>(),
+      ),
       child: const MyApp(),
     ),
   );
@@ -36,10 +49,10 @@ class MyApp extends StatelessWidget {
       title: 'Recipe App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true, 
-        colorSchemeSeed: Colors.deepOrange, // warm culinary app theme
+        useMaterial3: true,
+        colorSchemeSeed: Colors.deepOrange,
       ),
-      home: const RecipeListScreen(), 
+      home: const AuthGate(),
     );
   }
 }

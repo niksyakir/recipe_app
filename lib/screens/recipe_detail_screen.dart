@@ -31,7 +31,8 @@ class RecipeDetailScreen extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => RecipeFormScreen(existingRecipe: currentRecipe),
+                    builder: (_) =>
+                        RecipeFormScreen(existingRecipe: currentRecipe),
                   ),
                 ),
               ),
@@ -44,7 +45,9 @@ class RecipeDetailScreen extends StatelessWidget {
                     context: context,
                     builder: (ctx) => AlertDialog(
                       title: const Text('Delete Recipe'),
-                      content: Text('Are you sure you want to delete "${currentRecipe.name}"?'),
+                      content: Text(
+                        'Are you sure you want to delete "${currentRecipe.name}"?',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx),
@@ -52,11 +55,16 @@ class RecipeDetailScreen extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.read<RecipeProvider>().deleteRecipe(currentRecipe);
+                            context.read<RecipeProvider>().deleteRecipe(
+                              currentRecipe,
+                            );
                             Navigator.pop(ctx);
                             Navigator.pop(context);
                           },
-                          child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     ),
@@ -72,26 +80,38 @@ class RecipeDetailScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: currentRecipe.imagePath.isNotEmpty
-                    ? Image.file(File(currentRecipe.imagePath), height: 220, fit: BoxFit.cover)
+                    ? Image.file(
+                        File(currentRecipe.imagePath),
+                        height: 220,
+                        fit: BoxFit.cover,
+                      )
                     : Container(
-                        height: 220, 
-                        color: Colors.grey[300], 
-                        child: const Icon(Icons.image, size: 60, color: Colors.grey),
+                        height: 220,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.image,
+                          size: 60,
+                          color: Colors.grey,
+                        ),
                       ),
               ),
               const SizedBox(height: 12),
-              
+
               // Recipe Category Tag
               Align(
                 alignment: Alignment.centerLeft,
                 child: Chip(
                   label: Text(currentRecipe.type),
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  labelStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Ingredients Card
               Card(
                 elevation: 1,
@@ -102,29 +122,45 @@ class RecipeDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Ingredients', 
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        'Ingredients',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                       const Divider(),
                       if (currentRecipe.ingredients.isEmpty)
-                        const Text('No ingredients listed.', style: TextStyle(color: Colors.grey))
+                        const Text(
+                          'No ingredients listed.',
+                          style: TextStyle(color: Colors.grey),
+                        )
                       else
-                        ...currentRecipe.ingredients.map((i) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('• ', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Expanded(child: Text(i, style: const TextStyle(fontSize: 15))),
-                                ],
-                              ),
-                            )),
+                        ...currentRecipe.ingredients.map(
+                          (i) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '• ',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    i,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Steps/Instructions Card
               Card(
                 elevation: 1,
@@ -135,28 +171,49 @@ class RecipeDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Instructions', 
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        'Instructions',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                       const Divider(),
                       if (currentRecipe.steps.isEmpty)
-                        const Text('No steps listed.', style: TextStyle(color: Colors.grey))
+                        const Text(
+                          'No steps listed.',
+                          style: TextStyle(color: Colors.grey),
+                        )
                       else
-                        ...currentRecipe.steps.asMap().entries.map((e) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                                    child: Text('${e.key + 1}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        ...currentRecipe.steps.asMap().entries.map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondaryContainer,
+                                  child: Text(
+                                    '${e.key + 1}',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(child: Text(e.value, style: const TextStyle(fontSize: 15))),
-                                ],
-                              ),
-                            )),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    e.value,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
