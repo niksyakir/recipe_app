@@ -31,14 +31,20 @@ class RecipeProvider extends ChangeNotifier {
 
   void _seedSampleData() {
     final uuid = const Uuid();
-    _repo.add(Recipe(
-      id: uuid.v4(),
+    final sampleId = uuid.v4();
+    
+    // Explicitly create the recipe object
+    final sampleRecipe = Recipe(
+      id: sampleId,
       name: 'Nasi Lemak',
       type: recipeTypes.contains('Breakfast') ? 'Breakfast' : recipeTypes.first,
       imagePath: '',
       ingredients: ['Rice', 'Coconut milk', 'Anchovies', 'Egg', 'Cucumber'],
       steps: ['Cook rice with coconut milk', 'Fry anchovies', 'Serve with egg and cucumber'],
-    ));
+    );
+
+    // Save it using put, which ensures the object is tracked inside the box
+    _repo.box.put(sampleId, sampleRecipe);
   }
 
   // Handles filtering the UI list by selected dropdown category
@@ -50,6 +56,9 @@ class RecipeProvider extends ChangeNotifier {
 
   // Wrapper functions to bridge actions between the UI layer and the Data Repository
   Future<void> addRecipe(Recipe r) => _repo.add(r);
-  Future<void> updateRecipe(Recipe r) => _repo.update(r);
+  Future<void> updateRecipe(Recipe r) async {
+    await _repo.update(r);
+    notifyListeners(); // Force the list view to refresh immediately
+  }
   Future<void> deleteRecipe(Recipe r) => _repo.delete(r);
 }

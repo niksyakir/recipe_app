@@ -11,8 +11,8 @@ class RecipeRepository {
   // Create/Add a new recipe using its unique ID as the database key
   Future<void> add(Recipe recipe) => _box.put(recipe.id, recipe);
 
-  // Update an existing recipe using Hive's built-in save method
-  Future<void> update(Recipe recipe) => recipe.save();
+  // Update an existing recipe by overwriting its unique ID key
+  Future<void> update(Recipe recipe) => _box.put(recipe.id, recipe);
 
   // Delete a recipe entirely from the database
   Future<void> delete(Recipe recipe) => recipe.delete();
