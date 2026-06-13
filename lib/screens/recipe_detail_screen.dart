@@ -7,18 +7,34 @@ import '../providers/recipe_provider.dart';
 import 'recipe_form_screen.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
-  final Recipe recipe;
+  final String recipeId; 
 
-  const RecipeDetailScreen({super.key, required this.recipe});
+  const RecipeDetailScreen({super.key, required this.recipeId});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
+    // Dynamically look up the recipe from the provider.
+    // This makes this screen completely reactive to provider updates!
+    final provider = context.watch<RecipeProvider>();
+    final recipes = provider.getRecipes(filterType: 'All');
+    
+    // Safely look up the target recipe item
+    final recipeElement = recipes.where((r) => r.id == recipeId);
+    
+    // Defensive fallback if the recipe was deleted while on this screen
+    if (recipeElement.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text('Recipe no longer exists.')),
+      );
+    }
+    
+    final recipe = recipeElement.first;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // App bar expands into a beautiful image banner
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
@@ -35,7 +51,7 @@ class RecipeDetailScreen extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.delete_rounded, color: Colors.white),
-                onPressed: () => _showDeleteDialog(context),
+                onPressed: () => _showDeleteDialog(context, recipe),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -50,13 +66,15 @@ class RecipeDetailScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  recipe.imagePath.isNotEmpty
-                      ? Image.file(File(recipe.imagePath), fit: BoxFit.cover)
-                      : Container(
-                          color: theme.colorScheme.primaryContainer,
-                          child: Icon(Icons.restaurant_menu, size: 72, color: theme.colorScheme.primary.withValues(alpha:0.4)),
-                        ),
-                  // Dark gradient overlay to ensure text readability
+                  if (recipe.imagePath.isNotEmpty)
+                    recipe.imagePath.startsWith('assets/')
+                        ? Image.asset(recipe.imagePath, fit: BoxFit.cover)
+                        : Image.file(File(recipe.imagePath), fit: BoxFit.cover)
+                  else
+                    Container(
+                      color: theme.colorScheme.primaryContainer,
+                      child: Icon(Icons.restaurant_menu, size: 72, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
+                    ),
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -71,14 +89,12 @@ class RecipeDetailScreen extends StatelessWidget {
             ),
           ),
           
-          // Recipe Content
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category Badge
                   Chip(
                     label: Text(recipe.type),
                     backgroundColor: theme.colorScheme.primary.withValues(alpha:0.08),
@@ -87,11 +103,9 @@ class RecipeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   
-                  // Ingredients Section Header
                   _buildSectionHeader(context, Icons.shopping_basket_rounded, 'Ingredients'),
                   const SizedBox(height: 8),
                   
-                  // Ingredients List Card
                   Card(
                     margin: EdgeInsets.zero,
                     child: Padding(
@@ -112,11 +126,9 @@ class RecipeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   
-                  // Steps Section Header
                   _buildSectionHeader(context, Icons.soup_kitchen_rounded, 'Preparation Steps'),
                   const SizedBox(height: 8),
                   
-                  // Steps Timeline/List
                   recipe.steps.isEmpty
                       ? const Text('No steps specified.', style: TextStyle(color: Colors.black45))
                       : ListView.builder(
@@ -166,7 +178,7 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context) {
+  void _showDeleteDialog(BuildContext context, Recipe recipe) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

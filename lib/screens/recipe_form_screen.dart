@@ -132,7 +132,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 child: _imagePath.isNotEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(24),
-                        child: Image.file(File(_imagePath), fit: BoxFit.cover),
+                        child: _imagePath.startsWith('assets/')
+                          ? Image.asset(_imagePath, fit: BoxFit.cover)
+                          : Image.file(File(_imagePath), fit: BoxFit.cover),
                       )
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,

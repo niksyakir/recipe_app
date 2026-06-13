@@ -31,7 +31,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Nasi Lemak',
         type: 'Breakfast',
-        imagePath: '',
+        imagePath: 'assets/images/nasi lemak.jpg',
         ingredients: ['Rice', 'Coconut milk', 'Anchovies', 'Egg', 'Cucumber'],
         steps: [
           'Cook rice with coconut milk',
@@ -43,7 +43,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Chicken Rendang',
         type: 'Lunch',
-        imagePath: '',
+        imagePath: 'assets/images/rendang.jpg',
         ingredients: ['Chicken', 'Coconut milk', 'Rendang paste', 'Lemongrass'],
         steps: [
           'Marinate chicken with paste',
@@ -55,7 +55,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Mee Goreng',
         type: 'Dinner',
-        imagePath: '',
+        imagePath: 'assets/images/mee goreng.jpg',
         ingredients: ['Yellow noodles', 'Egg', 'Bean sprouts', 'Chili sauce'],
         steps: [
           'Stir fry noodles with chili sauce',
@@ -67,7 +67,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Cendol',
         type: 'Dessert',
-        imagePath: '',
+        imagePath: 'assets/images/cendol.jpg',
         ingredients: [
           'Pandan jelly',
           'Coconut milk',
@@ -84,7 +84,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Pisang Goreng',
         type: 'Snack',
-        imagePath: '',
+        imagePath: 'assets/images/pisang goreng.jpg',
         ingredients: [
           'Banana',
           'Flour',
@@ -102,7 +102,7 @@ class RecipeProvider extends ChangeNotifier {
         id: uuid.v4(),
         name: 'Teh Tarik',
         type: 'Beverage',
-        imagePath: '',
+        imagePath: 'assets/images/teh tarik.jpg',
         ingredients: ['Black tea', 'Condensed milk', 'Sugar'],
         steps: [
           'Brew strong black tea',

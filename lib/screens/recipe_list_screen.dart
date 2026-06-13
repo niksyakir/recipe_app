@@ -118,7 +118,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                             borderRadius: BorderRadius.circular(20),
                             onTap: () => Navigator.push(
                               context, 
-                              MaterialPageRoute(builder: (_) => RecipeDetailScreen(recipe: r))
+                              MaterialPageRoute(builder: (_) => RecipeDetailScreen(recipeId: r.id))
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(12),
@@ -130,10 +130,15 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                                     child: Container(
                                       width: 85,
                                       height: 85,
-                                      color: theme.colorScheme.primary.withValues(alpha:0.05),
-                                      child: r.imagePath.isNotEmpty
-                                          ? Image.file(File(r.imagePath), fit: BoxFit.cover)
-                                          : Icon(Icons.cookie_outlined, size: 36, color: theme.colorScheme.primary.withValues(alpha:0.5)),
+                                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                                      child: r.imagePath.isEmpty
+                                          ? Icon(Icons.cookie_outlined, size: 36, color: theme.colorScheme.primary.withValues(alpha: 0.5))
+                                          : ClipRRect(
+                                              borderRadius: BorderRadius.circular(14),
+                                              child: r.imagePath.startsWith('assets/')
+                                                  ? Image.asset(r.imagePath, fit: BoxFit.cover) // Loads from your bundle
+                                                  : Image.file(File(r.imagePath), fit: BoxFit.cover), // Loads user uploaded pics
+                                            ),
                                     ),
                                   ),
                                   const SizedBox(width: 16),
