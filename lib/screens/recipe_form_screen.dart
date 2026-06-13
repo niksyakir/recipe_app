@@ -211,7 +211,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 elevation: 2,
               ),
               onPressed: _saveForm,
-              child: Text(isEditing ? 'Save Structural Updates' : 'Publish Recipe', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              child: Text(isEditing ? 'Save Recipe' : 'Publish Recipe', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 40),
           ],
