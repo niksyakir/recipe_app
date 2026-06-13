@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     final auth = locator<AuthService>();
     final success = await auth.login(_usernameController.text.trim(), _passwordController.text);
+    if (!mounted) return;
     if (success) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const RecipeListScreen()),

@@ -22,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     final auth = locator<AuthService>();
     final success = await auth.register(_usernameController.text.trim(), _passwordController.text);
+    if (!mounted) return;
     if (success) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const RecipeListScreen()),
